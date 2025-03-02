@@ -17,9 +17,8 @@ embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-b
 vector_store = InMemoryVectorStore(embeddings)
 
 import bs4
-from langchain_community.document_loaders import WebBaseLoader
+from langchain_community.document_loaders import WebBaseLoader, PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import PyPDFLoader
 
 pdf_loader = PyPDFLoader('app/utils/AI Engineer.pdf')
 pages = []
