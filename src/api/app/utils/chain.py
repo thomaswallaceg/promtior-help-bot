@@ -4,7 +4,6 @@ from langchain_core.tools import tool
 from langchain_core.messages import SystemMessage
 from langgraph.graph import MessagesState, StateGraph, END
 from langgraph.prebuilt import ToolNode, tools_condition
-from langgraph.checkpoint.memory import MemorySaver
 
 @tool(response_format="content_and_artifact")
 def retrieve(query: str):
@@ -14,6 +13,7 @@ def retrieve(query: str):
         (f"Source: {doc.metadata}\n" f"Content: {doc.page_content}")
         for doc in retrieved_docs
     )
+    print(serialized)
     return serialized, retrieved_docs
 
 # Step 1: Generate an AIMessage that may include a tool-call to be sent.
@@ -41,14 +41,16 @@ def generate(state: MessagesState):
             break
     tool_messages = recent_tool_messages[::-1]
 
+
     # Format into prompt
     docs_content = "\n\n".join(doc.content for doc in tool_messages)
+    print(docs_content)
     system_message_content = (
         "You are an assistant for question-answering tasks. "
         "Use the following pieces of retrieved context to answer "
-        "the question. If you don't know the answer, say that you "
-        "don't know. Use three sentences maximum and keep the "
-        "answer concise."
+        "the question without mentioning the source. If you don't "
+        "know the answer, say that you don't know. Use three "
+        "sentences maximum and keep the answer concise."
         "\n\n"
         f"{docs_content}"
     )

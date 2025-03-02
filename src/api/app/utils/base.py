@@ -19,18 +19,26 @@ vector_store = InMemoryVectorStore(embeddings)
 import bs4
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_community.document_loaders import PyPDFLoader
+
+pdf_loader = PyPDFLoader('app/utils/AI Engineer.pdf')
+pages = []
+for page in pdf_loader.load():
+    pages.append(page)
+# Filter PDF pages with actual Promtior info
+pages = [pages[0], pages[2], pages[3], pages[9]]
 
 # Load contents
-loader = WebBaseLoader(
-    web_paths=("https://lilianweng.github.io/posts/2023-06-23-agent/",),
+web_loader = WebBaseLoader(
+    web_paths=("https://www.promtior.ai/", "https://www.promtior.ai/use-cases", "https://www.promtior.ai/service"),
     bs_kwargs=dict(
         parse_only=bs4.SoupStrainer(
             class_=("post-content", "post-title", "post-header")
         )
     ),
 )
-docs = loader.load()
+docs = web_loader.load()
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-all_splits = text_splitter.split_documents(docs)
+all_splits = text_splitter.split_documents(pages + docs)
 
-_ = vector_store.add_documents(documents=all_splits)
+vector_store.add_documents(documents=all_splits)
