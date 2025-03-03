@@ -1,79 +1,54 @@
-# promtior-help-bot-api
+# Promtior Helpbot
 
-## Installation
+This project implements a Retrieval-Augmented Generation (RAG) chatbot. It utilizes the following models:
 
-Install the LangChain CLI if you haven't yet
+- **LLM**: Llama3 hosted on **Groq**
+- **Embeddings**: Cohere-hosted model
 
-```bash
-pip install -U langchain-cli
-```
+## Features
 
-## Adding packages
+- Retrieval-Augmented Generation (RAG) architecture.
+- LangChain for LLM orchestration.
+- LangServe for API hosting.
+- Streamlit-based frontend.
+- Hosted on Railway (https://promtior-help-bot-production.up.railway.app/)
 
-```bash
-# adding packages from 
-# https://github.com/langchain-ai/langchain/tree/master/templates
-langchain app add $PROJECT_NAME
+## Setup
 
-# adding custom GitHub repo packages
-langchain app add --repo $OWNER/$REPO
-# or with whole git string (supports other git providers):
-# langchain app add git+https://github.com/hwchase17/chain-of-verification
-
-# with a custom api mount point (defaults to `/{package_name}`)
-langchain app add $PROJECT_NAME --api_path=/my/custom/path/rag
-```
-
-Note: you remove packages by their api path
+### 1. Clone the Repository
 
 ```bash
-langchain app remove my/custom/path/rag
+git clone https://github.com/thomaswallaceg/promtior-help-bot.git
+cd promtior-help-bot/src
 ```
 
-## Setup LangSmith (Optional)
-LangSmith will help us trace, monitor and debug LangChain applications. 
-You can sign up for LangSmith [here](https://smith.langchain.com/). 
-If you don't have access, you can skip this section
-
-
-```shell
-export LANGCHAIN_TRACING_V2=true
-export LANGCHAIN_API_KEY=<your-api-key>
-export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "default"
-```
-
-## Launch LangServe
+### 2. Install Dependencies Using Poetry
 
 ```bash
-langchain serve
+poetry install
 ```
 
-## Running in Docker
+### 3. Configure API Keys
 
-This project folder includes a Dockerfile that allows you to easily build and host your LangServe app.
+Create a `.env` file in the project root and add:
 
-### Building the Image
-
-To build the image, you simply:
-
-```shell
-docker build . -t my-langserve-app
+```
+GROQ_API_KEY=your_groq_api_key
+COHERE_API_KEY=your_cohere_api_key
 ```
 
-If you tag your image with something other than `my-langserve-app`,
-note it for use in the next step.
+### 4. Start the LangServe Backend
 
-### Running the Image Locally
-
-To run the image, you'll need to include any environment variables
-necessary for your application.
-
-In the below example, we inject the `OPENAI_API_KEY` environment
-variable with the value set in my local environment
-(`$OPENAI_API_KEY`)
-
-We also expose port 8080 with the `-p 8080:8080` option.
-
-```shell
-docker run -e OPENAI_API_KEY=$OPENAI_API_KEY -p 8080:8080 my-langserve-app
+```bash
+poetry run langchain serve --port 8080
 ```
+
+### 5. Start the Streamlit Frontend
+
+```bash
+poetry run streamlit run app/ui.py --server.port 8081 --server.address 0.0.0.0
+```
+
+---
+
+**Author:** [Thomas Wallace]
