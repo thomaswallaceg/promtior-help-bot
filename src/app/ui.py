@@ -2,9 +2,8 @@ import streamlit as st
 from langserve import RemoteRunnable
 from langchain_core.messages import HumanMessage
 
-# import os
-# from dotenv import load_dotenv
-# load_dotenv()
+st.set_page_config(page_title="Promtior Helpbot")
+st.title("Promtior Helpbot")
 
 bot = RemoteRunnable("http://localhost:8080/")
 
