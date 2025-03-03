@@ -6,14 +6,6 @@ from app.utils.chain import runnable
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 @app.get("/")
 async def redirect_root_to_docs():
     return RedirectResponse("/docs")

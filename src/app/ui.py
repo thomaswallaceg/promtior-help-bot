@@ -1,12 +1,12 @@
 import streamlit as st
-import os
-from dotenv import load_dotenv
-from langchain_core.messages import HumanMessage
 from langserve import RemoteRunnable
+from langchain_core.messages import HumanMessage
 
-load_dotenv()
+# import os
+# from dotenv import load_dotenv
+# load_dotenv()
 
-bot = RemoteRunnable(os.environ.get("API_URL"))
+bot = RemoteRunnable("http://localhost:8080/")
 
 if 'message_history' not in st.session_state:
     st.session_state.message_history = []

@@ -2,22 +2,22 @@ FROM python:3.11-slim
 
 RUN pip install poetry==2.1.1
 
-RUN poetry config virtualenvs.create false
-
 WORKDIR /code
 
 COPY ./pyproject.toml ./README.md ./poetry.lock* ./
-
-COPY ./package[s] ./packages
 
 RUN poetry install  --no-interaction --no-ansi --no-root
 
 COPY ./app ./app
 
 RUN poetry install --no-interaction --no-ansi
+ENV GIT_PYTHON_REFRESH=quiet
+
+COPY start.sh /code/
+RUN chmod +x /code/start.sh
 
 EXPOSE 8080
+EXPOSE 8081
+EXPOSE 11434
 
-ENV GROQ_API_KEY=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
-
-CMD exec uvicorn app.server:app --host 0.0.0.0 --port 8080
+ENTRYPOINT ["/code/start.sh"]

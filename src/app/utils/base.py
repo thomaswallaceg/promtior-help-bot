@@ -3,17 +3,23 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+if not os.environ.get("GROQ_API_KEY"):
+    raise Exception("Missing GROQ_API_KEY")
+if not os.environ.get("COHERE_API_KEY"):
+    raise Exception("Missing COHERE_API_KEY")
+
+cohere_api_key = os.environ.get("COHERE_API_KEY")
+
 os.environ.setdefault("USER_AGENT", "user_agent")
 
-if not os.environ.get("GROQ_API_KEY"):
-    raise Exception("\n\n\nMissing GROQ_API_KEY\n\n\n")
-
 from langchain.chat_models import init_chat_model
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_cohere import CohereEmbeddings
 from langchain_core.vectorstores import InMemoryVectorStore
 
+
+
 llm = init_chat_model("llama3-70b-8192", model_provider="groq")
-embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
+embeddings = CohereEmbeddings(model="embed-english-v3.0", cohere_api_key=cohere_api_key)
 vector_store = InMemoryVectorStore(embeddings)
 
 import bs4

@@ -13,7 +13,6 @@ def retrieve(query: str):
         (f"Source: {doc.metadata}\n" f"Content: {doc.page_content}")
         for doc in retrieved_docs
     )
-    print(serialized)
     return serialized, retrieved_docs
 
 # Step 1: Generate an AIMessage that may include a tool-call to be sent.
@@ -44,7 +43,6 @@ def generate(state: MessagesState):
 
     # Format into prompt
     docs_content = "\n\n".join(doc.content for doc in tool_messages)
-    print(docs_content)
     system_message_content = (
         "You are an assistant for question-answering tasks. "
         "Use the following pieces of retrieved context to answer "
